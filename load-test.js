@@ -7,6 +7,12 @@ const jobGetDuration = new Trend(
     true
 );
 
+const baseUrl =
+    __ENV.BASE_URL || 'http://host.docker.internal:8080';
+
+const testEmail = __ENV.TEST_EMAIL;
+const testPassword = __ENV.TEST_PASSWORD;
+
 export const options = {
     vus: 4,
     duration: '20s',
@@ -14,11 +20,17 @@ export const options = {
 
 export function setup() {
 
+    if (!testEmail || !testPassword) {
+        throw new Error(
+            'TEST_EMAIL and TEST_PASSWORD environment variables are required'
+        );
+    }
+
     const loginResponse = http.post(
-        'http://host.docker.internal:8080/api/users/login',
+        `${baseUrl}/api/users/login`,
         JSON.stringify({
-            email: 'test2@example.com',
-            password: 'Password123'
+            email: testEmail,
+            password: testPassword
         }),
         {
             headers: {
@@ -33,9 +45,9 @@ export function setup() {
 
     const token = loginResponse.json('accessToken');
 
-    // Warm the Redis cache before measuring.
+    // Warm Redis cache before measuring.
     http.get(
-        'http://host.docker.internal:8080/api/job-applications/1',
+        `${baseUrl}/api/job-applications/1`,
         {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -51,7 +63,7 @@ export function setup() {
 export default function (data) {
 
     const response = http.get(
-        'http://host.docker.internal:8080/api/job-applications/1',
+        `${baseUrl}/api/job-applications/1`,
         {
             headers: {
                 Authorization: `Bearer ${data.token}`
