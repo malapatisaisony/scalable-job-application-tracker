@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { authenticatedFetch } from './api';
+import { API_BASE_URL, authenticatedFetch } from './api';
 import './index.css';
 
 function App() {
@@ -49,7 +49,7 @@ function App() {
 
     try {
       const response = await fetch(
-          'http://localhost:8080/api/users/login',
+          `${API_BASE_URL}/api/users/login`,
           {
             method: 'POST',
             headers: {
@@ -80,7 +80,6 @@ function App() {
       );
 
       setLoggedIn(true);
-
     } catch (error) {
       setMessage(
           'Could not connect to the backend.'
@@ -111,7 +110,7 @@ function App() {
 
     try {
       const response = await fetch(
-          'http://localhost:8080/api/users/register',
+          `${API_BASE_URL}/api/users/register`,
           {
             method: 'POST',
             headers: {
@@ -146,7 +145,6 @@ function App() {
       setMessage(
           'Account created successfully. Please sign in.'
       );
-
     } catch (error) {
       setMessage(
           'Could not connect to the backend.'
@@ -235,7 +233,6 @@ function App() {
       setJobs(data.content);
       setPage(data.number);
       setTotalPages(data.totalPages);
-
     } catch (error) {
       setJobsError(
           'Could not connect to the backend.'
@@ -401,7 +398,6 @@ function App() {
             0
         );
       }
-
     } catch (error) {
       setJobsError(
           'Could not connect to the backend.'
@@ -449,7 +445,6 @@ function App() {
           statusFilter,
           targetPage
       );
-
     } catch (error) {
       setJobsError(
           'Could not connect to the backend.'
@@ -464,7 +459,7 @@ function App() {
     try {
       if (refreshToken) {
         await fetch(
-            'http://localhost:8080/api/users/logout',
+            `${API_BASE_URL}/api/users/logout`,
             {
               method: 'POST',
 
@@ -479,13 +474,11 @@ function App() {
             }
         );
       }
-
     } catch (error) {
       console.error(
           'Logout request failed:',
           error
       );
-
     } finally {
       localStorage.removeItem(
           'accessToken'

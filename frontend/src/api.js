@@ -1,4 +1,6 @@
-const API_BASE_URL = 'http://localhost:8080';
+export const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL ||
+    'http://localhost:8080';
 
 async function refreshAccessToken() {
     const refreshToken =
@@ -13,11 +15,9 @@ async function refreshAccessToken() {
             `${API_BASE_URL}/api/users/refresh`,
             {
                 method: 'POST',
-
                 headers: {
                     'Content-Type': 'application/json',
                 },
-
                 body: JSON.stringify({
                     refreshToken,
                 }),
@@ -56,12 +56,11 @@ export async function authenticatedFetch(
     let accessToken =
         localStorage.getItem('accessToken');
 
-    const makeRequest = (token) => {
-        return fetch(
+    const makeRequest = (token) =>
+        fetch(
             `${API_BASE_URL}${path}`,
             {
                 ...options,
-
                 headers: {
                     ...options.headers,
 
@@ -74,7 +73,6 @@ export async function authenticatedFetch(
                 },
             }
         );
-    };
 
     let response =
         await makeRequest(accessToken);
